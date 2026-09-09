@@ -2,7 +2,7 @@
    PREFERENCES / API BASE  (stored locally, never sent anywhere
    except this browser's own backend)
    ========================================================= */
-const DEFAULT_API_BASE = "https://prototype-7hgr.onrender.com";
+const DEFAULT_API_BASE = "https://backend-ddbr.onrender.com";
 const DEFAULT_ML_API_BASE = "https://ml-service-dgnu.onrender.com";
 const DEFAULT_INCIDENT_API_BASE = "https://incident-service-13c2.onrender.com";
  
