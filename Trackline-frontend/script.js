@@ -2,9 +2,9 @@
    PREFERENCES / API BASE  (stored locally, never sent anywhere
    except this browser's own backend)
    ========================================================= */
-const DEFAULT_API_BASE = "http://127.0.0.1:8000";
-const DEFAULT_ML_API_BASE = "http://127.0.0.1:8001";
-const DEFAULT_INCIDENT_API_BASE = "http://127.0.0.1:8002";
+const DEFAULT_API_BASE = "https://prototype-7hgr.onrender.com";
+const DEFAULT_ML_API_BASE = "https://ml-service-dgnu.onrender.com";
+const DEFAULT_INCIDENT_API_BASE = "https://incident-service-13c2.onrender.com";
  
 function loadPrefs() {
   try {
