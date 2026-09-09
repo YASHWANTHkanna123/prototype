@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trackline — Where is my train, really.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+<div class="app-shell">
+ 
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 28 28" width="22" height="22">
+          <circle cx="14" cy="14" r="13" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M7 17.5 L21 17.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M9.5 14 L18.5 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M11 10.2 L17 10.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="14" cy="14" r="2.1" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="brand-word">Trackline</span>
+    </div>
+ 
+    <nav class="nav" id="mainNav">
+      <button class="nav-item active" data-panel="overview">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><path d="M3 10.5 10 3l7 7.5M5 9v7.5h10V9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        Overview
+      </button>
+      <button class="nav-item" data-panel="all-trains">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><rect x="4" y="3" width="12" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 10.5h12M7.3 17l-1.6 2M12.7 17l1.6 2M7 6.7h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="12.2" r=".9" fill="currentColor"/><circle cx="13" cy="12.2" r=".9" fill="currentColor"/></svg>
+        </span>
+        All Trains
+      </button>
+      <button class="nav-item" data-panel="live">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="2.1" fill="currentColor"/><path d="M10 1.6v2.1M10 16.3v2.1M18.4 10h-2.1M3.7 10H1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        Live Tracking
+      </button>
+      <button class="nav-item" data-panel="operations">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><path d="M10 3a7 7 0 1 1-6.2 10.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 6.5v3.8l2.6 1.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.6 9 4 7l1.8 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        Operations
+      </button>
+      <button class="nav-item" data-panel="operator">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><path d="M10 2 3 5.2v4.4c0 4.6 3 7.9 7 9.4 4-1.5 7-4.8 7-9.4V5.2L10 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 6.5v4M10 13.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        Operator Mode
+      </button>
+      <button class="nav-item" data-panel="saved">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><path d="M5.5 3.5h9v13l-4.5-3-4.5 3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </span>
+        Saved Routes
+      </button>
+      <button class="nav-item" data-panel="preferences">
+        <span class="nav-icon">
+          <svg viewBox="0 0 20 20" width="17" height="17"><path d="M4 5.5h8M4 10h12M4 14.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14.2" cy="5.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7.6" cy="14.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </span>
+        Preferences
+      </button>
+    </nav>
+ 
+    <div class="sidebar-footer">
+      <div class="status-pill" id="connectionPill">
+        <span class="status-dot" id="connectionDot"></span>
+        <span id="connectionLabel">Connecting to Rail Radar</span>
+      </div>
+    </div>
+  </aside>
+ 
+  <!-- ===================== CONTENT ===================== -->
+  <main class="content">
+ 
+    <!-- ===================== OVERVIEW ===================== -->
+    <section class="panel active" id="panel-overview">
+      <header class="page-head">
+        <p class="eyebrow-line">Trackline dashboard</p>
+        <h1 class="display-headline">Where is my train, really.</h1>
+        <p class="page-sub">A live window into Indian Railways — every scheduled service, every platform, every minute of delay, sourced straight from Rail Radar.</p>
+      </header>
+ 
+      <section class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-label">Trains indexed</span>
+          <strong class="stat-value" id="statTrainsIndexed">—</strong>
+          <span class="stat-foot" id="statTrainsIndexedFoot">Fetching network snapshot…</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Selected service schedule</span>
+          <strong class="stat-value" id="statSelectedService">No train selected</strong>
+          <span class="stat-foot" id="statSelectedServiceFoot">Pick a train in All Trains or Live Tracking</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Network reach</span>
+          <strong class="stat-value" id="statNetworkReach">—</strong>
+          <span class="stat-foot" id="statNetworkReachFoot">Stations covered by Rail Radar</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Service watch</span>
+          <strong class="stat-value" id="statServiceWatch">0</strong>
+          <span class="stat-foot" id="statServiceWatchFoot">Trains tracked this session</span>
+        </div>
+      </section>
+ 
+      <section class="overview-lower">
+        <div class="overview-card">
+          <h2>Jump back in</h2>
+          <p class="muted">Recently tracked services from this session.</p>
+          <div id="overviewRecent" class="recent-list">
+            <p class="empty-note">Nothing tracked yet — head to <strong>All Trains</strong> to search a route, or <strong>Live Tracking</strong> to look up a train number directly.</p>
+          </div>
+        </div>
+        <div class="overview-card">
+          <h2>Saved routes</h2>
+          <p class="muted">Routes you've pinned for quick access.</p>
+          <div id="overviewSaved" class="recent-list">
+            <p class="empty-note">No saved routes yet.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+ 
+    <!-- ===================== ALL TRAINS ===================== -->
+    <section class="panel" id="panel-all-trains">
+      <header class="page-head compact">
+        <p class="eyebrow-line">All Trains</p>
+        <h2 class="section-headline">Find every direct service</h2>
+        <p class="page-sub">Search a source and destination to see the full route board — schedules, run days, and live delay, all from a single lookup.</p>
+      </header>
+ 
+      <section class="search-panel">
+        <div class="search-row">
+          <div class="pill-field" id="fromField">
+            <label>From</label>
+            <div class="pill-input-wrap">
+              <input type="text" id="fromStation" placeholder="Station or city" autocomplete="off">
+              <div class="station-chip hidden" id="fromChip"></div>
+            </div>
+            <div class="suggestions" id="fromSuggestions"></div>
+          </div>
+ 
+          <button class="swap-btn" id="swapBtn" title="Swap stations" type="button">
+            <svg viewBox="0 0 20 20" width="16" height="16"><path d="M6 4v11M6 15l-3-3M6 15l3-3M14 16V5M14 5l-3 3M14 5l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+ 
+          <div class="pill-field" id="toField">
+            <label>To</label>
+            <div class="pill-input-wrap">
+              <input type="text" id="toStation" placeholder="Station or city" autocomplete="off">
+              <div class="station-chip hidden" id="toChip"></div>
+            </div>
+            <div class="suggestions" id="toSuggestions"></div>
+          </div>
+ 
+          <div class="pill-field date-field">
+            <label for="travelDate">Date</label>
+            <input type="date" id="travelDate">
+          </div>
+ 
+          <button class="primary-btn" id="findBtn" type="button">Find trains</button>
+        </div>
+      </section>
+ 
+      <div id="findStatus" class="find-status">Enter a source and destination station to see all trains running between them.</div>
+ 
+      <section id="resultsSection" class="results-section hidden">
+        <div class="route-board-header">
+          <h3 id="routeBoardTitle">— → —</h3>
+          <p id="resultsSummary"></p>
+        </div>
+        <div id="resultsList" class="results-list"></div>
+      </section>
+    </section>
+ 
+    <!-- ===================== LIVE TRACKING ===================== -->
+    <section class="panel" id="panel-live">
+      <header class="page-head compact">
+        <p class="eyebrow-line">Live Tracking</p>
+        <h2 class="section-headline">Spot a train in real time</h2>
+        <p class="page-sub">Enter any train number for its live position, delay, and full scheduled route.</p>
+      </header>
+ 
+      <section class="track-search">
+        <input type="text" id="trainNumber" placeholder="Enter train number (e.g. 12951)" value="12951">
+        <button class="primary-btn" id="trackBtn" type="button">Track train</button>
+      </section>
+ 
+      <div id="status" class="find-status">Enter a train number and press Track train, or select a service from All Trains.</div>
+ 
+      <!-- LIVE STATS -->
+      <section id="trainCard" class="train-card hidden">
+        <div class="train-title">
+          <div>
+            <h2 id="trainName">---</h2>
+            <p id="trainNumberDisplay">Train No: ---</p>
+          </div>
+          <div id="runningStatus" class="running">RUNNING</div>
+        </div>
+ 
+        <div class="train-stats">
+          <div class="stat"><span>Current</span><strong id="currentStation">---</strong></div>
+          <div class="stat"><span>Delay</span><strong id="delay">---</strong></div>
+          <div class="stat"><span>Distance</span><strong id="distance">---</strong></div>
+          <div class="stat"><span>Source</span><strong id="source">---</strong></div>
+        </div>
+ 
+        <div class="position-card">
+          <div class="position-head">
+            <span>Current position</span>
+            <h3 id="positionText">---</h3>
+          </div>
+          <div class="progress-box">
+            <div class="progress-label">
+              <span>Journey progress</span>
+              <span id="progressText">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+              <div class="progress-marker" id="trainMarker">
+                <svg viewBox="0 0 20 20" width="14" height="14"><rect x="3" y="6" width="14" height="8" rx="2" fill="currentColor"/><circle cx="6.5" cy="16" r="1.4" fill="currentColor"/><circle cx="13.5" cy="16" r="1.4" fill="currentColor"/><path d="M5 6V4h10v2" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="train-stats secondary-stats">
+          <div class="stat"><span>Speed</span><strong id="statSpeed">---</strong></div>
+          <div class="stat"><span>Next stop</span><strong id="statNextStop">---</strong></div>
+          <div class="stat"><span>Last updated</span><strong id="statLastUpdated">---</strong></div>
+        </div>
+
+        <!-- ===================== ML PREDICTED ETA (separate ML microservice) ===================== -->
+        <section class="ml-eta-card" id="mlEtaCard">
+          <div class="ml-eta-head">
+            <div>
+              <h3>Predicted ETA <span class="ml-badge">ML model</span></h3>
+              <p class="muted" id="mlEtaTarget">Trained on ~1,900 historical stop records across ~2,000 trains.</p>
+            </div>
+            <span class="ml-eta-confidence" id="mlEtaConfidence">--</span>
+          </div>
+          <div class="ml-eta-body" id="mlEtaBody">
+            <div class="ml-eta-main">
+              <strong id="mlEtaValue">--:--</strong>
+              <span id="mlEtaRange">Range: --:-- – --:--</span>
+            </div>
+            <div class="ml-eta-side">
+              <span id="mlEtaImpact">Additional impact: -- min</span>
+              <ul id="mlEtaReasons"></ul>
+            </div>
+          </div>
+          <div class="total-delay-chip hidden">
+            <span class="total-delay-label">Total predicted delay (ETA + incident)</span>
+            <strong id="mlTotalDelayValue">-- min</strong>
+          </div>
+          <p id="mlEtaStatus" class="find-status"></p>
+
+          <div class="combined-window-card hidden" id="mlAbnormalDelayCard">
+            <div class="combined-window-head">Reported incident for this train <span class="ai-badge">Rule-based</span></div>
+            <div class="combined-window-formula">
+              <span>ML predicted arrival: <strong id="mlAbnormalEtaBase">--:--</strong></span>
+              <span>+</span>
+              <span>Abnormal delay reported: <strong id="mlAbnormalIncidentRange">-- – -- min</strong></span>
+            </div>
+            <div class="combined-window-result">
+              <span id="mlAbnormalWindowResult">--:-- – --:--</span>
+              <small>Worst-case combined arrival window, including the reported incident</small>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== JOURNEY TIMELINE (Where-Is-My-Train style) ===================== -->
+        <section class="journey-card">
+          <div class="journey-head">
+            <div>
+              <h3>Journey timeline</h3>
+              <p class="muted" id="journeySub">Scheduled stopping stations only, in order.</p>
+              <div class="total-delay-chip hidden" style="margin-top:8px;">
+                <span class="total-delay-label">Total predicted delay (ETA + incident)</span>
+                <strong id="timelineTotalDelayValue">-- min</strong>
+              </div>
+            </div>
+            <div class="journey-legend">
+              <span><i class="dot dot-passed"></i>Passed</span>
+              <span><i class="dot dot-current"></i>Live</span>
+              <span><i class="dot dot-upcoming"></i>Upcoming</span>
+            </div>
+          </div>
+          <div class="journey-scroll" id="journeyScroll">
+            <div class="journey-track" id="journeyTrack">
+              <div class="journey-line" aria-hidden="true"></div>
+              <div class="journey-train-indicator" id="journeyTrainIndicator">
+                <svg viewBox="0 0 20 20" width="16" height="16"><rect x="3" y="6" width="14" height="8" rx="2" fill="currentColor"/><circle cx="6.5" cy="16" r="1.4" fill="currentColor"/><circle cx="13.5" cy="16" r="1.4" fill="currentColor"/><path d="M5 6V4h10v2" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+              </div>
+              <div class="journey-stops" id="journeyStops"></div>
+            </div>
+          </div>
+        </section>
+ 
+        <div class="fare-toggle-row">
+          <button class="ghost-btn" id="fareToggleBtn" type="button">Check fare &amp; class availability</button>
+        </div>
+        <div id="fareSection" class="fare-section hidden">
+          <div class="fare-form">
+            <div class="fare-field">
+              <label for="fareFrom">From</label>
+              <input type="text" id="fareFrom" placeholder="Station code">
+            </div>
+            <div class="fare-field">
+              <label for="fareTo">To</label>
+              <input type="text" id="fareTo" placeholder="Station code">
+            </div>
+            <div class="fare-field">
+              <label for="fareDate">Date</label>
+              <input type="date" id="fareDate">
+            </div>
+            <div class="fare-field">
+              <label for="fareQuota">Quota</label>
+              <select id="fareQuota">
+                <option value="GN">General</option>
+                <option value="TQ">Tatkal</option>
+                <option value="LD">Ladies</option>
+              </select>
+            </div>
+            <button class="primary-btn small" id="fareFetchBtn" type="button">Check</button>
+          </div>
+          <div id="fareResult" class="fare-result"></div>
+        </div>
+      </section>
+ 
+      <!-- ROUTE TABLE -->
+      <section id="routeSection" class="route-section hidden">
+        <div class="route-header">
+          <div>
+            <h2>Scheduled route</h2>
+            <p id="routeSummary">---</p>
+          </div>
+          <div id="updatedAt" class="updated-at">Updated: ---</div>
+        </div>
+ 
+        <div class="route-table-wrap">
+          <table class="route-table">
+            <thead>
+              <tr>
+                <th>Station</th>
+                <th>Sched. arrival</th>
+                <th>Sched. departure</th>
+                <th>Platform</th>
+                <th>Day</th>
+                <th>ETA (predicted)</th>
+              </tr>
+            </thead>
+            <tbody id="routeTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+ 
+    <!-- ===================== OPERATIONS ===================== -->
+    <section class="panel" id="panel-operations">
+      <header class="page-head compact">
+        <p class="eyebrow-line">Operations</p>
+        <h2 class="section-headline">Fare &amp; class checker</h2>
+        <p class="page-sub">Look up class-wise fare and availability for any train and leg — on demand, never fetched automatically per result row.</p>
+      </header>
+ 
+      <section class="search-panel">
+        <div class="search-row wrap">
+          <div class="pill-field small">
+            <label for="opsTrainNumber">Train number</label>
+            <input type="text" id="opsTrainNumber" placeholder="e.g. 12951">
+          </div>
+          <div class="pill-field small">
+            <label for="opsFrom">From code</label>
+            <input type="text" id="opsFrom" placeholder="e.g. NDLS">
+          </div>
+          <div class="pill-field small">
+            <label for="opsTo">To code</label>
+            <input type="text" id="opsTo" placeholder="e.g. BCT">
+          </div>
+          <div class="pill-field small date-field">
+            <label for="opsDate">Date</label>
+            <input type="date" id="opsDate">
+          </div>
+          <div class="pill-field small">
+            <label for="opsQuota">Quota</label>
+            <select id="opsQuota">
+              <option value="GN">General</option>
+              <option value="TQ">Tatkal</option>
+              <option value="LD">Ladies</option>
+            </select>
+          </div>
+          <button class="primary-btn" id="opsFareBtn" type="button">Check fare</button>
+        </div>
+      </section>
+ 
+      <div id="opsStatus" class="find-status">Fill in a train number and both station codes to check fares.</div>
+      <div id="opsFareResult" class="fare-result"></div>
+ 
+      <section class="overview-card wide">
+        <h2>Session watch log</h2>
+        <p class="muted">Every train you've tracked live this session, most recent first.</p>
+        <div id="watchLog" class="watch-log">
+          <p class="empty-note">No trains tracked yet this session.</p>
+        </div>
+      </section>
+    </section>
+ 
+    <!-- ===================== OPERATOR MODE (INCIDENT REPORTING) ===================== -->
+    <section class="panel" id="panel-operator">
+      <header class="page-head compact">
+        <p class="eyebrow-line">Authorized Operator Mode</p>
+        <h2 class="section-headline">Station Master / Postmaster incident log</h2>
+        <p class="page-sub">UI/testing feature only. Scenarios logged here are stored locally in this browser and are completely independent of live tracking, ETA, and ML prediction — nothing here touches RailRadar data.</p>
+      </header>
+ 
+      <!-- ---------- DUMMY LOGIN GATE (prototype only — no real auth) ---------- -->
+      <section class="operator-login-card" id="operatorLoginGate">
+        <div class="operator-login-head">
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M10 2 3 5.2v4.4c0 4.6 3 7.9 7 9.4 4-1.5 7-4.8 7-9.4V5.2L10 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.2 10.2l1.9 1.9 3.7-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <h2>Operator login</h2>
+            <p class="muted">Prototype login — any name / ID / password is accepted. Nothing is verified against a real system.</p>
+          </div>
+        </div>
+        <div class="search-row wrap">
+          <div class="pill-field small">
+            <label for="operatorName">Operator name</label>
+            <input type="text" id="operatorName" placeholder="e.g. R. Karthik">
+          </div>
+          <div class="pill-field small">
+            <label for="operatorId">Station code / Employee ID</label>
+            <input type="text" id="operatorId" placeholder="e.g. MDU / SM4471">
+          </div>
+          <div class="pill-field small">
+            <label for="operatorPassword">Password</label>
+            <input type="password" id="operatorPassword" placeholder="anything works (dummy)">
+          </div>
+          <button class="primary-btn" id="operatorLoginBtn" type="button">Log in</button>
+        </div>
+        <p id="operatorLoginStatus" class="find-status"></p>
+      </section>
+ 
+      <!-- ---------- ACTUAL OPERATOR CONTENT (hidden until "logged in") ---------- -->
+      <div id="operatorContent" class="hidden">
+ 
+        <div class="operator-session-bar">
+          <span id="operatorSessionLabel">Logged in</span>
+          <button class="ghost-btn small" id="operatorLogoutBtn" type="button">Log out</button>
+        </div>
+ 
+        <div class="operator-disclaimer">
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M10 2 2 17h16L10 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 8v4.2M10 14.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span>Prototype only — logging a scenario here does <strong>not</strong> change any train's ETA, live position, or ML prediction. This log is a local, isolated record for testing the operator UI.</span>
+        </div>
+
+        <!-- ===================== YOUR REPORTS (shown right after login) ===================== -->
+        <section class="overview-card wide" id="myReportsSection">
+          <div class="incident-log-head">
+            <h2>Your AI Delay Impact reports</h2>
+            <span class="muted" id="myReportsCount"></span>
+          </div>
+          <p class="muted">Every "Predict Impact (AI)" report you've filed, under your operator name. Use "Add info" on any report to update it and recalculate its delay range — filing a brand new report is still done further down.</p>
+          <div id="myReportsList"></div>
+        </section>
+ 
+        <section class="search-panel">
+          <div class="search-row wrap">
+            <div class="pill-field small">
+              <label for="incidentType">Incident type</label>
+              <select id="incidentType">
+                <option value="Track Fracture / Rail Flaw">Track Fracture / Rail Flaw</option>
+                <option value="Interlocking / Signal Failure">Interlocking / Signal Failure</option>
+                <option value="OHE Power Snag / Line Block">OHE Power Snag / Line Block</option>
+                <option value="Severe Weather / Waterlogging">Severe Weather / Waterlogging</option>
+                <option value="Unauthorized Track Obstruction">Unauthorized Track Obstruction</option>
+                <option value="Speed Restriction / Caution Order (Slow Down)">Speed Restriction / Caution Order (Slow Down)</option>
+                <option value="Level Crossing Malfunction">Level Crossing Malfunction</option>
+                <option value="Rolling Stock Failure / Engine Trouble">Rolling Stock Failure / Engine Trouble</option>
+                <option value="Bridge / Tunnel Inspection Hold">Bridge / Tunnel Inspection Hold</option>
+              </select>
+            </div>
+ 
+            <div class="pill-field small" id="incidentStationField">
+              <label for="incidentStation">Near station</label>
+              <div class="pill-input-wrap">
+                <input type="text" id="incidentStation" placeholder="Type or pick a station" autocomplete="off">
+              </div>
+              <div class="suggestions" id="incidentStationSuggestions"></div>
+            </div>
+ 
+            <div class="pill-field small">
+              <label for="incidentDistance">Distance from station (km)</label>
+              <input type="number" id="incidentDistance" min="0" step="0.1" placeholder="e.g. 4.2">
+            </div>
+ 
+            <div class="pill-field small">
+              <label for="incidentDirection">Direction</label>
+              <select id="incidentDirection">
+                <option value="Up Line">Up Line</option>
+                <option value="Down Line">Down Line</option>
+              </select>
+            </div>
+ 
+            <div class="pill-field small" id="incidentTowardsField">
+              <label for="incidentTowards">Towards station (optional)</label>
+              <div class="pill-input-wrap">
+                <input type="text" id="incidentTowards" placeholder="Type or pick a station" autocomplete="off">
+              </div>
+              <div class="suggestions" id="incidentTowardsSuggestions"></div>
+            </div>
+ 
+            <div class="pill-field small hidden" id="incidentSpeedLimitField">
+              <label for="incidentSpeedLimit">Restricted speed (km/h)</label>
+              <input type="number" id="incidentSpeedLimit" min="0" step="5" placeholder="e.g. 30">
+            </div>
+ 
+            <div class="pill-field small">
+              <label for="incidentDelay">Est. delay to trains (minutes)</label>
+              <input type="number" id="incidentDelay" min="0" step="5" placeholder="e.g. 30">
+            </div>
+ 
+            <div class="pill-field small">
+              <label for="incidentClearance">Est. clearance time (minutes)</label>
+              <input type="number" id="incidentClearance" min="0" step="5" placeholder="e.g. 60">
+            </div>
+ 
+            <button class="primary-btn" id="logIncidentBtn" type="button">Log Scenario</button>
+          </div>
+        </section>
+ 
+        <p id="incidentStatus" class="find-status"></p>
+
+        <!-- ===================== AI INCIDENT IMPACT PREDICTION (rule-based) ===================== -->
+        <section class="incident-predict-card">
+          <div class="incident-predict-head">
+            <div>
+              <h2>AI Delay Impact Prediction <span class="ai-badge">Rule-based</span></h2>
+              <p class="muted">Estimates an additional delay range from this report. Not a trained model yet — see Preferences for details.</p>
+            </div>
+          </div>
+
+          <label class="muted" style="display:block; margin-bottom:6px;">Is a known incident currently affecting this train?</label>
+          <div class="incident-known-toggle">
+            <button type="button" class="toggle-btn active" data-val="yes" id="incidentKnownYesBtn">Yes</button>
+            <button type="button" class="toggle-btn" data-val="no" id="incidentKnownNoBtn">No</button>
+          </div>
+
+          <div class="pill-field small" style="max-width:220px; margin-bottom:10px;">
+            <label for="aiIncidentTrainNumber">Train number</label>
+            <input type="text" id="aiIncidentTrainNumber" placeholder="e.g. 12658" inputmode="numeric">
+          </div>
+
+          <div class="incident-ai-fields" id="incidentAiFields">
+            <div class="search-row wrap">
+              <div class="pill-field small">
+                <label for="aiIncidentType">Incident type</label>
+                <select id="aiIncidentType">
+                  <option value="signal_failure">Signal / interlocking failure</option>
+                  <option value="track_obstruction">Track obstruction</option>
+                  <option value="technical_fault">Rolling stock / technical fault</option>
+                  <option value="medical_emergency">Onboard medical emergency</option>
+                  <option value="ohe_power_issue">OHE power / line block</option>
+                  <option value="severe_weather">Severe weather / waterlogging</option>
+                  <option value="derailment">Derailment</option>
+                  <option value="security_issue">Security / law-and-order issue</option>
+                  <option value="level_crossing_issue">Level crossing malfunction</option>
+                  <option value="other">Other / unspecified</option>
+                </select>
+              </div>
+
+              <div class="pill-field small">
+                <label for="aiSeverity">Scale / severity</label>
+                <select id="aiSeverity">
+                  <option value="minor">Minor</option>
+                  <option value="moderate" selected>Moderate</option>
+                  <option value="major">Major</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+
+              <div class="pill-field small">
+                <label for="aiMovementStatus">Train's live movement</label>
+                <select id="aiMovementStatus">
+                  <option value="normal">Normal speed</option>
+                  <option value="slow" selected>Moving slowly</option>
+                  <option value="stopped">Stopped / at rest</option>
+                </select>
+              </div>
+
+              <div class="pill-field small">
+                <label for="aiIncidentPhoto">Photo (if applicable)</label>
+                <input type="file" id="aiIncidentPhoto" accept="image/*">
+              </div>
+
+              <div class="pill-field small">
+                <label for="aiHelpArrived">Reinforcement / help arrived?</label>
+                <select id="aiHelpArrived">
+                  <option value="no" selected>No</option>
+                  <option value="soon">Soon / on the way</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+
+              <div class="pill-field small">
+                <label for="aiIncidentNotes">Notes (optional)</label>
+                <input type="text" id="aiIncidentNotes" placeholder="Any extra context">
+              </div>
+            </div>
+          </div>
+
+          <button class="primary-btn" id="predictImpactBtn" type="button" style="margin-top:14px;">Predict Impact (AI)</button>
+          <p id="incidentPredictStatus" class="find-status"></p>
+
+          <div class="incident-predict-result hidden" id="incidentPredictResult">
+            <div class="ml-eta-head">
+              <div class="incident-predict-range" id="incidentPredictRange">
+                --<small>Additional delay range</small>
+              </div>
+              <span class="incident-predict-confidence" id="incidentPredictConfidence">--% confidence</span>
+            </div>
+            <ul class="incident-predict-reasons" id="incidentPredictReasons"></ul>
+          </div>
+
+          <div class="combined-window-card hidden" id="combinedWindowCard">
+            <div class="combined-window-head">Combined with this train's ETA prediction</div>
+            <div class="combined-window-formula">
+              <span>ETA predicted: <strong id="combinedEtaBase">--:--</strong></span>
+              <span>+</span>
+              <span>Incident impact: <strong id="combinedIncidentRange">-- – -- min</strong></span>
+            </div>
+            <div class="combined-window-result">
+              <span id="combinedWindowResult">--:-- – --:--</span>
+              <small>Worst-case combined arrival window at the next predicted stop</small>
+            </div>
+            <div class="total-delay-chip hidden" style="margin-top:12px;">
+              <span class="total-delay-label">Total predicted delay (ETA + incident)</span>
+              <strong id="combinedTotalDelayValue">-- min</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="overview-card wide">
+          <div class="incident-log-head">
+            <h2>Local incident log</h2>
+            <button class="ghost-btn small" id="clearIncidentsBtn" type="button">Clear log</button>
+          </div>
+          <p class="muted">Multiple scenarios can be logged and kept side by side. Stored only in this browser's localStorage.</p>
+          <div id="incidentLog" class="incident-log">
+            <p class="empty-note">No incidents logged yet.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+ 
+    <!-- ===================== SAVED ROUTES ===================== -->
+    <section class="panel" id="panel-saved">
+      <header class="page-head compact">
+        <p class="eyebrow-line">Saved Routes</p>
+        <h2 class="section-headline">Your pinned journeys</h2>
+        <p class="page-sub">Save a from/to pair once and jump straight back into All Trains without retyping station codes. Stored locally in this browser.</p>
+      </header>
+ 
+      <section class="search-panel">
+        <div class="search-row wrap">
+          <div class="pill-field small">
+            <label for="savedFrom">From code</label>
+            <input type="text" id="savedFrom" placeholder="e.g. MAS">
+          </div>
+          <div class="pill-field small">
+            <label for="savedTo">To code</label>
+            <input type="text" id="savedTo" placeholder="e.g. MDU">
+          </div>
+          <div class="pill-field small">
+            <label for="savedLabel">Label (optional)</label>
+            <input type="text" id="savedLabel" placeholder="e.g. Weekend home run">
+          </div>
+          <button class="primary-btn" id="saveRouteBtn" type="button">Save route</button>
+        </div>
+      </section>
+ 
+      <div id="savedRoutesList" class="saved-list">
+        <p class="empty-note">No saved routes yet — add one above.</p>
+      </div>
+    </section>
+ 
+    <!-- ===================== PREFERENCES ===================== -->
+    <section class="panel" id="panel-preferences">
+      <header class="page-head compact">
+        <p class="eyebrow-line">Preferences</p>
+        <h2 class="section-headline">Tune how Trackline behaves</h2>
+        <p class="page-sub">Stored locally in this browser — nothing here is sent anywhere except your own backend.</p>
+      </header>
+ 
+      <section class="prefs-grid">
+        <div class="overview-card">
+          <h2>Backend connection</h2>
+          <p class="muted">Where Trackline's frontend looks for the FastAPI backend.</p>
+          <div class="pill-field">
+            <label for="prefApiBase">API base URL</label>
+            <input type="text" id="prefApiBase" placeholder="http://127.0.0.1:8000">
+          </div>
+        </div>
+
+        <div class="overview-card">
+          <h2>ETA prediction (ML)</h2>
+          <p class="muted">Separate ML microservice used only for the "Predicted ETA" card in Live Tracking. Independent of the backend above and of RailRadar.</p>
+          <div class="pill-field">
+            <label for="prefMlApiBase">ML API base URL</label>
+            <input type="text" id="prefMlApiBase" placeholder="http://127.0.0.1:8001">
+          </div>
+        </div>
+
+        <div class="overview-card">
+          <h2>Incident impact prediction</h2>
+          <p class="muted">Third, independent microservice used only for the "AI Delay Impact Prediction" section in Operator Mode. It's rule-based, not a trained model yet — see incident-service/README.md.</p>
+          <div class="pill-field">
+            <label for="prefIncidentApiBase">Incident API base URL</label>
+            <input type="text" id="prefIncidentApiBase" placeholder="http://127.0.0.1:8002">
+          </div>
+        </div>
+ 
+        <div class="overview-card">
+          <h2>Live Tracking</h2>
+          <p class="muted">How often the Live Tracking panel refreshes an actively tracked train.</p>
+          <div class="pill-field">
+            <label for="prefRefreshSeconds">Auto-refresh interval (seconds)</label>
+            <input type="number" id="prefRefreshSeconds" min="15" step="5" value="45">
+          </div>
+        </div>
+ 
+        <div class="overview-card">
+          <h2>Fare defaults</h2>
+          <p class="muted">Pre-selected quota when opening the fare checker.</p>
+          <div class="pill-field">
+            <label for="prefDefaultQuota">Default quota</label>
+            <select id="prefDefaultQuota">
+              <option value="GN">General</option>
+              <option value="TQ">Tatkal</option>
+              <option value="LD">Ladies</option>
+            </select>
+          </div>
+        </div>
+      </section>
+ 
+      <div class="prefs-actions">
+        <button class="primary-btn" id="savePrefsBtn" type="button">Save preferences</button>
+        <button class="ghost-btn" id="clearSessionBtn" type="button">Clear session watch log</button>
+      </div>
+      <p id="prefsStatus" class="find-status"></p>
+    </section>
+ 
+  </main>
+</div>
+ 
+<script src="script.js"></script>
+</body>
+</html>
